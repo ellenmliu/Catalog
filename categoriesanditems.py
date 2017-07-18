@@ -113,7 +113,7 @@ session.add(item9)
 session.commit()
 
 item10 = Item(name = "Grip",
-             description="No blister zone"
+             description="No blister zone",
              category=category4)
 
 session.add(item10)
@@ -127,14 +127,14 @@ session.add(item11)
 session.commit()
 
 item12 = Item(name = "Hockey Skates",
-             description="Figure eights on ice"
+             description="Figure eights on ice",
              category=category6)
 
 session.add(item12)
 session.commit()
 
 item13 = Item(name = "Snowboard",
-             description="Faster than ever"
+             description="Faster than ever",
              category=category7)
 
 session.add(item13)
