@@ -40,9 +40,9 @@ def editCategory(category_name):
   if request.method == 'POST':
     if request.form['name']:
       categoryToEdit.name = request.form['name']
-      session.add(categoryToEdit)
-      session.commit()
-      flash("Category successfully edited")
+    session.add(categoryToEdit)
+    session.commit()
+    flash("Category successfully edited")
     return redirect(url_for('showCategories'))
   else:
     return render_template('editcategory.html', category_name = category_name, category = categoryToEdit)
@@ -60,41 +60,70 @@ def deleteCategory(category_name):
 
 @app.route('/category/<string:category_name>/')
 def showItemsInCategory(category_name):
-  return ""
+  category = session.query(Category).filter_by(name = category_name).one()
+  items = session.query(Item).filter_by(category_id = category.id).all()
+  return render_template('categoryitems.html', category = category, items = items)
 
 @app.route('/category/<string:category_name>/JSON')
 def showItemsInCategoryJSON(category_name):
-  return ""
+  category = session.query(Category).filter_by(name = category_name).one()
+  items = session.query(Item).filter_by(category_id = category.id).all()
+  return jsonify(Items = [i.serialize for i in items])
 
 @app.route('/category/<string:category_name>/<string:item_name>')
 def showItem(category_name, item_name):
-  return ""
+  category = session.query(Category).filter_by(name = category_name).one()
+  item = session.query(Item).filter_by(category = category).filter_by(name = item_name).one()
+  return render_template('item.html', category = category, item = item)
 
 @app.route('/category/<string:category_name>/<string:item_name>/JSON')
 def showItemJSON(category_name, item_name):
-  return ""
+  category = session.query(Category).filter_by(name = category_name).one()
+  item = session.query(Item).filter_by(category = category).filter_by(name = item_name).one()
+  return jsonify(Item = [item.serialize])
 
 @app.route('/category/<string:category_name>/new', methods = ['GET', 'POST'])
 def newItem(category_name):
+  category = session.query(Category).filter_by(name = category_name).one()
   if request.method == 'POST':
-    return ""
+    newItem = Item(
+      name = request.form['name'],
+      description = request.form['description'],
+      category = category)
+    session.add(newItem)
+    session.commit()
+    flash("New category created")
+    return redirect(url_for('showItemInCategory', category_name = category_name))
   else:
-    return ""
+    return render_template('newitem.html', category_name = category_name)
 
 @app.route('/category/<string:category_name>/<string:item_name>/edit', methods = ['GET', 'POST'])
 def editItem(category_name, item_name):
+  category = session.query(Category).filter_by(name = category_name).one()
+  itemToEdit = session.query(Item).filter_by(category = category).filter_by(name = item_name).one()
   if request.method == 'POST':
-    return ""
+    if request.form['name']:
+      itemToEdit.name = request.form['name']
+    if request.form['description']:
+      itemToEdit.name = request.form['description']
+    session.add(categoryToEdit)
+    session.commit()
+    flash("Item successfully edited")
+    return redirect(url_for('showItemsInCategory', category_name = category_name))
   else:
-    return ""
+    return render_template('edititem.html',category_name = category_name, item_name = item_name)
 
 @app.route('/category/<string:category_name>/<string:item_name>/delete', methods = ['GET', 'POST'])
 def deleteItem(category_name, item_name):
+  category = session.query(Category).filter_by(name = category_name).one()
+  itemToDelete = session.query(Item).filter_by(category = category).filter_by(name = item_name).one()
   if request.method == 'POST':
-    return ""
+    session.delete(itemToDelete)
+    session.commit()
+    flash("Item successfully deleted")
+    return redirect(url_for('showItemsInCategory', category_name = category_name))         
   else:
-    return ""
-
+    return render_template('deleteitem.html',category_name = category_name, item_name = item_name)
 
 
 if __name__ == '__main__':

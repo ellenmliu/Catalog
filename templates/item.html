@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  </head>
+
+  <body>
+    <h1>{{category.name}}</h1>
+    {% if item %}
+      <div>
+        <p> {{item.name}} </p>
+        <p> {{item.description}} </p>
+      </div>
+    {% else %}
+      <p> There are no such item </p>
+    {% endif %}
+  </body>
+</html>

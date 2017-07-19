@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  </head>
+
+  <body>
+    <h1>{{category.name}}</h1>
+    {% if items %}
+      {% for i in items %}
+        <div>
+          <p> {{i.name}} </p>
+          <p> {{i.description}} </p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p> There are no items </p>
+    {% endif %}
+  </body>
+</html>
