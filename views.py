@@ -14,32 +14,49 @@ session = DBSession()
 @app.route('/')
 @app.route('/categories')
 def showCategories():
-  return ""
+  categories = session.query(Category).all()
+  return render_template('categories.html', categories = categories)
 
 @app.route('/categories/JSON')
 def showCategoriesJSON():
-  return ""
+  categories = session.query(Category).all()
+  return jsonify(Categories = [c.serialize for c in categories])
 
 @app.route('/category/new', methods = ['GET', 'POST'])
 def newCategory():
   if request.method == 'POST':
-    return ""
+    newCategory = Category(
+      name = request.form['name'])
+    session.add(newCategory)
+    session.commit()
+    flash("New category created")
+    return redirect(url_for('showCategories'))
   else:
-    return ""
+    return render_template('newcategory.html')
 
 @app.route('/category/<string:category_name>/edit', methods = ['GET', 'POST'])
 def editCategory(category_name):
+  categoryToEdit = session.query(Category).filter_by(name = category_name).one()
   if request.method == 'POST':
-    return ""
+    if request.form['name']:
+      categoryToEdit.name = request.form['name']
+      session.add(categoryToEdit)
+      session.commit()
+      flash("Category successfully edited")
+    return redirect(url_for('showCategories'))
   else:
-    return ""
+    return render_template('editcategory.html', category_name = category_name, category = categoryToEdit)
 
 @app.route('/category/<string:category_name>/delete', methods = ['GET', 'POST'])
 def deleteCategory(category_name):
+  categoryToDelete = session.query(Category).filter_by(name = category_name).one()
   if request.method == 'POST':
-    return ""
+    session.delete(categoryToDelete)
+    session.commit()
+    flash("Category successfully deleted")
+    return redirect(url_for('showCategories'))
   else:
-    return ""
+    return render_template('deletecategory.html', category_name = category_name, category = categoryToDelete)
 
 @app.route('/category/<string:category_name>/')
 def showItemsInCategory(category_name):
