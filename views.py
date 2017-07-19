@@ -20,17 +20,26 @@ def showCategories():
 def showCategoriesJSON():
   return ""
 
-@app.route('/category/new')
+@app.route('/category/new', methods = ['GET', 'POST'])
 def newCategory():
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
-@app.route('/category/<string:category_name>/edit')
+@app.route('/category/<string:category_name>/edit', methods = ['GET', 'POST'])
 def editCategory(category_name):
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
-@app.route('/category/<string:category_name>/delete')
+@app.route('/category/<string:category_name>/delete', methods = ['GET', 'POST'])
 def deleteCategory(category_name):
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
 @app.route('/category/<string:category_name>/')
 def showItemsInCategory(category_name):
@@ -48,17 +57,26 @@ def showItem(category_name, item_name):
 def showItemJSON(category_name, item_name):
   return ""
 
-@app.route('/category/<string:category_name>/new')
+@app.route('/category/<string:category_name>/new', methods = ['GET', 'POST'])
 def newItem(category_name):
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
-@app.route('/category/<string:category_name>/<string:item_name>/edit')
+@app.route('/category/<string:category_name>/<string:item_name>/edit', methods = ['GET', 'POST'])
 def editItem(category_name, item_name):
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
-@app.route('/category/<string:category_name>/<string:item_name>/delete')
+@app.route('/category/<string:category_name>/<string:item_name>/delete', methods = ['GET', 'POST'])
 def deleteCategory(category_name, item_name)):
-  return ""
+  if request.method == 'POST':
+    return ""
+  else:
+    return ""
 
 
 
