@@ -4,6 +4,19 @@
   </head>
 
   <body>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul class = flash>
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <div>
+      <a href = '{{url_for('newCategory') }}'>Create New Category</a>
+    </div>
     <h1>Categories</h1>
     {% if categories %}
       {% for c in categories %}

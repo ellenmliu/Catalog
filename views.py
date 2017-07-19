@@ -93,7 +93,7 @@ def newItem(category_name):
     session.add(newItem)
     session.commit()
     flash("New category created")
-    return redirect(url_for('showItemInCategory', category_name = category_name))
+    return redirect(url_for('showItemsInCategory', category_name = category_name))
   else:
     return render_template('newitem.html', category_name = category_name)
 

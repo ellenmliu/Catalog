@@ -5,6 +5,22 @@
 
   <body>
     <h1>{{category.name}}</h1>
+
+    <!--Message Flashing-->
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+
+			<ul class = flash>
+				{% for message in messages %}
+				  <li><strong>{{message}}</strong></li>
+				{% endfor %}
+			</ul>
+			{% endif %}
+		{% endwith %}
+		<div class = "">
+			<a href = '{{url_for('newItem', category_name = category_name) }}'>Create New Item</a>
+		</div>
+
     {% if items %}
       {% for i in items %}
         <div>
