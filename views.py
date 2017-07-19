@@ -72,7 +72,7 @@ def editItem(category_name, item_name):
     return ""
 
 @app.route('/category/<string:category_name>/<string:item_name>/delete', methods = ['GET', 'POST'])
-def deleteCategory(category_name, item_name)):
+def deleteItem(category_name, item_name):
   if request.method == 'POST':
     return ""
   else:
