@@ -1,10 +1,21 @@
-<html>
-  <head>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-  </head>
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
 
-  <body>
-    <h1>{{category.name}}</h1>
+  <div class="row top-menu">
+		<div class="col-md-10"></div>
+		<div class="col-md-2 text-right"></div>
+	</div>
+	<div class="row divider blue">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner main">
+		<div class="col-md-1"></div>
+		<div class="col-md-11 padding-none">
+			<h1>{{category.name}}</h1>
+		</div>
+	</div>
+
 
     <!--Message Flashing-->
 		{% with messages = get_flashed_messages() %}
@@ -18,7 +29,7 @@
 			{% endif %}
 		{% endwith %}
 		<div class = "">
-			<a href = '{{url_for('newItem', category_name = category_name) }}'>Create New Item</a>
+			<a href = '{{url_for('newItem', category_name = category.name) }}'>Create New Item</a>
 		</div>
 
     {% if items %}
@@ -31,5 +42,4 @@
     {% else %}
       <p> There are no items </p>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

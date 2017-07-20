@@ -1,0 +1,56 @@
+html, body {
+ width: 100%;
+ background-color: #6CD5CD;
+}
+
+.header {
+  background-color: #00A79B;
+  border-radius: 5px;
+}
+
+.maincontent {
+  display: flex;
+  margin:0;
+  padding:0;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.rightcol, .leftcol {
+  height: 100%;
+  padding: 15px 50px 50px 40px;
+}
+
+.leftcol{
+  width: 25%;
+}
+
+.rightcol {
+  width: 65%;
+}
+
+.middledivider {
+  border-right: 1px solid #aaa;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+a:visited, a:link, a:hover, a:active {
+  color: #FFB800;
+  text-decoration: none;
+}
+
+.button {
+  padding-top: 20px;
+}
+
+.flash {
+	background-color: #6CD5CD;
+	width:100%;
+	text-decoration: none;
+}
+
+.flash li {
+	list-style-type: none;
+	text-align: center;
+}

@@ -15,7 +15,8 @@ session = DBSession()
 @app.route('/categories')
 def showCategories():
   categories = session.query(Category).all()
-  return render_template('categories.html', categories = categories)
+  lasttenitems = session.query(Item).order_by(Item.id.desc()).limit(10)
+  return render_template('categories.html', categories = categories, lasttenitems = lasttenitems)
 
 @app.route('/categories/JSON')
 def showCategoriesJSON():
@@ -59,6 +60,7 @@ def deleteCategory(category_name):
     return render_template('deletecategory.html', category_name = category_name, category = categoryToDelete)
 
 @app.route('/category/<string:category_name>/')
+@app.route('/category/<string:category_name>/items')
 def showItemsInCategory(category_name):
   category = session.query(Category).filter_by(name = category_name).one()
   items = session.query(Item).filter_by(category_id = category.id).all()
