@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, flash, jsonify
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
 
@@ -28,9 +28,12 @@ def newCategory():
   if request.method == 'POST':
     newCategory = Category(
       name = request.form['name'])
-    session.add(newCategory)
-    session.commit()
-    flash("New category created")
+    if not session.query(exists().where(Category.name == request.form['name'])):
+      session.add(newCategory)
+      session.commit()
+      flash("New category created")
+    else:
+      flash("Category already exists")
     return redirect(url_for('showCategories'))
   else:
     return render_template('newcategory.html')
@@ -50,7 +53,7 @@ def editCategory(category_name):
 
 @app.route('/category/<string:category_name>/delete', methods = ['GET', 'POST'])
 def deleteCategory(category_name):
-  categoryToDelete = session.query(Category).filter_by(name = category_name).one()
+  categoryToDelete = session.query(Category).filter_by(name = category_name).first()
   if request.method == 'POST':
     session.delete(categoryToDelete)
     session.commit()
@@ -62,7 +65,7 @@ def deleteCategory(category_name):
 @app.route('/category/<string:category_name>/')
 @app.route('/category/<string:category_name>/items')
 def showItemsInCategory(category_name):
-  category = session.query(Category).filter_by(name = category_name).one()
+  category = session.query(Category).filter_by(name = category_name).first()
   items = session.query(Item).filter_by(category_id = category.id).all()
   return render_template('categoryitems.html', category = category, items = items)
 
@@ -92,9 +95,12 @@ def newItem(category_name):
       name = request.form['name'],
       description = request.form['description'],
       category = category)
-    session.add(newItem)
-    session.commit()
-    flash("New category created")
+    if not session.query(exists().where(Item.name == request.form['name'] and Item.Category.name == category)):
+      session.add(newItem)
+      session.commit()
+      flash("New category created")
+    else:
+      flash("Item already exists") 
     return redirect(url_for('showItemsInCategory', category_name = category_name))
   else:
     return render_template('newitem.html', category_name = category_name)

@@ -1,45 +1,53 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-
-  <div class="row top-menu">
-		<div class="col-md-10"></div>
-		<div class="col-md-2 text-right"></div>
-	</div>
-	<div class="row divider blue">
-		<div class="col-md-12"></div>
-	</div>
-	<div class="row banner main">
-		<div class="col-md-1"></div>
-		<div class="col-md-11 padding-none">
-			<h1>{{category.name}}</h1>
-		</div>
-	</div>
-
-
-    <!--Message Flashing-->
+  <div class=header>
+    <div class="row top-menu">
+  		<div class="col-md-10"></div>
+  		<div class="col-md-2 text-right"></div>
+  	</div>
+  	<div class="row divider blue">
+  		<div class="col-md-12"></div>
+  	</div>
+  	<div class="row banner main">
+  		<div class="col-md-1"></div>
+  		<div class="col-md-11 padding-none">
+  			<h1>Catalog</h1>
+  		</div>
+  	</div>
+  </div>
+  <!--Message Flashing-->
+  <div class=flash>
 		{% with messages = get_flashed_messages() %}
 			{% if messages %}
-
-			<ul class = flash>
-				{% for message in messages %}
-				  <li><strong>{{message}}</strong></li>
-				{% endfor %}
-			</ul>
+  			<ul>
+  				{% for message in messages %}
+  				  <li><strong>{{message}}</strong></li>
+  				{% endfor %}
+  			</ul>
 			{% endif %}
 		{% endwith %}
-		<div class = "">
-			<a href = '{{url_for('newItem', category_name = category.name) }}'>Create New Item</a>
-		</div>
+  </div>
 
-    {% if items %}
-      {% for i in items %}
-        <div>
-          <p> {{i.name}} </p>
-          <p> {{i.description}} </p>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p> There are no items </p>
-    {% endif %}
+  <div class=maincontent>
+    <div class=rightcol>
+
+      <div class=button>
+        <a href = '{{url_for('newItem', category_name = category.name) }}'>Create New Item</a>
+      </div>
+
+      {% if items %}
+        {% for i in items %}
+          <div class=button>
+            <a href='{{url_for('showItem', category_name = category.name, item_name = i.name) }}'>
+              <p> {{i.name}} </p>
+              <p> {{i.description}} </p>
+            </a>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p> There are no items </p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}
