@@ -1,4 +1,6 @@
 # Catalog App
+Author: Ellen Liu
+Last Edit: 6/28/2017
 
 ## Requirements for this project
 
