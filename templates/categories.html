@@ -1,21 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class=header>
-    <div class="row top-menu">
-  		<div class="col-md-10"></div>
-  		<div class="col-md-2 text-right"></div>
-  	</div>
-  	<div class="row divider blue">
-  		<div class="col-md-12"></div>
-  	</div>
-  	<div class="row banner main">
-  		<div class="col-md-1"></div>
-  		<div class="col-md-11 padding-none">
-  			<h1>Catalog</h1>
-  		</div>
-  	</div>
-  </div>
+
   <!--Flash message-->
   <div class=flash>
     {% with messages = get_flashed_messages() %}
@@ -32,14 +18,13 @@
     <div class=maincontent>
       <div class=leftcol>
         <h2>Category</h2>
-        <div>
-          <a href = '{{url_for('newCategory') }}'>Create New Category</a>
-        </div>
+
         {% if categories %}
           {% for c in categories %}
-            <div class=button>
-              <a href = "{{url_for('showItemsInCategory', category_name = c.name )}}"> {{c.name}} </a>
-            </div>
+              <a href = "{{url_for('showItemsInCategory', category_name = c.name )}}">
+                <div class=button>{{c.name}}</div>
+              </a>
+
           {% endfor %}
         {% else %}
           <p> There are no categories </p>
@@ -48,13 +33,17 @@
       <div class=middledivider>
       </div>
       <div class=rightcol>
+
+
         <h2>Latest items</h2>
 
         {% if lasttenitems %}
           {% for i in lasttenitems %}
-            <div class=button>
-              <a href = "{{url_for('showItem', category_name = i.category.name, item_name = i.name )}}">{{i.name}} </a>(<i>{{i.category.name}}</i>)
-            </div>
+
+              <a href = "{{url_for('showItem', category_name = i.category.name, item_name = i.name )}}">
+                <div class=button>{{i.name}} <i>({{i.category.name}})</i></div>
+              </a>
+
           {% endfor %}
         {% else %}
           <p> There are no items </p>

@@ -50,6 +50,55 @@ a:visited, a:link, a:hover, a:active {
   box-shadow: 5px 5px 2.5px #888888;
 }
 
+.button:hover {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  box-shadow: 0px 0px 0px #888888;
+}
+
+.heading{
+  display: flex;
+  margin-right: 0px;
+  padding-right: 0px;
+}
+
+.heading h1{
+  color: #00655E;
+}
+
+.topbutton {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  box-shadow: 5px 5px 2.5px #888888;
+  width: 75px;
+  text-align: center;
+}
+
+.topbutton:hover {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  box-shadow: 0px 0px 0px #888888;
+}
+
+.new {
+  background-color: #FFB800;
+  border: 1px solid #FFB800;
+}
+
+a .new{
+  color: #FFF;
+}
+
+i {
+  color: #000;
+}
+
 .flash {
 	background-color: #6CD5CD;
 	width:100%;

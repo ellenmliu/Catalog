@@ -1,32 +1,34 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class=header>
-    <div class="row top-menu">
-  		<div class="col-md-10"></div>
-  		<div class="col-md-2 text-right"></div>
-  	</div>
-  	<div class="row divider blue">
-  		<div class="col-md-12"></div>
-  	</div>
-  	<div class="row banner main">
-  		<div class="col-md-1"></div>
-  		<div class="col-md-11 padding-none">
-  			<h1>Catalog</h1>
-  		</div>
-  	</div>
+
+  <!--Message Flashing-->
+  <div class=flash>
+		{% with messages = get_flashed_messages() %}
+			{% if messages %}
+  			<ul>
+  				{% for message in messages %}
+  				  <li><strong>{{message}}</strong></li>
+  				{% endfor %}
+  			</ul>
+			{% endif %}
+		{% endwith %}
   </div>
+
+
   <div class=maincontent>
-    <h1>{{category.name}}</h1>
-    {% if item %}
-      <div>
-        <p> {{item.name}} </p>
-        <p> {{item.description}} </p>
-        <a href = '{{url_for('editItem', category_name = category.name, item_name = item.name) }}'>Edit</a>
-        <a href = '{{url_for('deleteItem', category_name = category.name, item_name = item.name) }}'>Delete</a>
-      </div>
-    {% else %}
-      <p> There are no such item </p>
-    {% endif %}
+    <div class=rightcol>
+      <h1>{{item.name}}</h1>
+      {% if item %}
+        <div>
+          <p> Description: </p>
+          <p> {{item.description}} </p>
+          <a href = '{{url_for('editItem', category_name = category.name, item_name = item.name) }}'>Edit</a>
+          <a href = '{{url_for('deleteItem', category_name = category.name, item_name = item.name) }}'>Delete</a>
+        </div>
+      {% else %}
+        <p> There are no such item </p>
+      {% endif %}
+    </div>
   </div>
  {% endblock %}

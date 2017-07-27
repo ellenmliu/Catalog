@@ -1,27 +1,33 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-  <div class=header>
-    <div class="row top-menu">
-  		<div class="col-md-10"></div>
-  		<div class="col-md-2 text-right"></div>
-  	</div>
-  	<div class="row divider blue">
-  		<div class="col-md-12"></div>
-  	</div>
-  	<div class="row banner main">
-  		<div class="col-md-1"></div>
-  		<div class="col-md-11 padding-none">
-  			<h1>Catalog</h1>
-  		</div>
-  	</div>
+  
+  <!--Message Flashing-->
+  <div class=flash>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li><strong>{{message}}</strong></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
   </div>
 
-    <h2>New Item</h2>
-    <form action="{{url_for('newItem', category_name = category_name)}}" method = 'POST'>
-      <p>Name:</p>
-      <input type='text' size='30' name='name'>
-      <p>Description:</p>
-      <input type='text' size='30' name='description'>
-      <input type='submit' value='Create'>
+  <div class=maincontent>
+    <div class=rightcol>
+
+
+      <h2>New Item</h2>
+      <form action="{{url_for('newItem', category_name = category_name)}}" method = 'POST'>
+        <p>Name:</p>
+        <input type='text' size='30' name='name'>
+        <p>Description:</p>
+        <input type='text' size='30' name='description'>
+        <input type='submit' value='Create'>
+        <a href = '{{url_for('showItemsInCategory', category_name=category_name) }}'>Cancel</a>
+      </form>
+    </div>
+  </div>
 {% endblock %}
