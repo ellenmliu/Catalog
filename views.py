@@ -177,11 +177,11 @@ def disconnect():
             gdisonnect()
             del login_session['gplus_id']
             del login_session['credentials']
-        del login_sesion['user_id']
-        del login_sesion['username']
-        del login_sesion['email']
-        del login_sesion['picture']
-        del login_sesion['provider']
+        del login_session['user_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['provider']
         flash('You have been successfully logged out.')
         return redirect(url_for('showCategories'))
     else:
@@ -242,7 +242,6 @@ def showItem(category_name, item_name):
     c = session.query(Item).filter_by(category=category)
     item = c.filter_by(name=item_name).one()
     creator = getUserInfo(item.user_id)
-    user_id = login_session['user_id']
 
     # If the user is not logged in, they can see the public version of page
     if 'username' not in login_session or creator.id != user_id:
