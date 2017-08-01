@@ -24,6 +24,9 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog App"
 
+## Check if google sign in works
+## Add in fb login
+
 # Login page
 @app.route('/login')
 def showLogin():
@@ -70,6 +73,7 @@ def gconnect():
         return response
 
     # Verify that access token is valid for this app
+    gplus_id = credentials.id_token['sub']
     if result['issued_to'] != CLIENT_ID:
         response = make_response(json.dumps("Token's client ID does \
                                 not match app's"), 401)
@@ -101,7 +105,7 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    user_id = getUserId(data['email'])
+    user_id = getUserID(data['email'])
     if not user_id:
         user_id = createUser(login_session)
 
@@ -237,12 +241,16 @@ def showItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     item = c.filter_by(name=item_name).one()
+    creator = getUserInfo(item.user_id)
+    user_id = login_session['user_id']
 
     # If the user is not logged in, they can see the public version of page
-    if 'username' not in login_session:
-        return render_template('publicitem.html', category=category, item=item)
+    if 'username' not in login_session or creator.id != user_id:
+        return render_template('publicitem.html', category=category, item=item,
+                               creator=creator)
     else:
-        return render_template('item.html', category=category, item=item)
+        return render_template('item.html', category=category, item=item,
+                               creator=creator)
 
 
 # JSON of the current item
@@ -260,18 +268,20 @@ def newItem(category_name):
     # Redirects to login page if user is not logged in
     if 'username' not in login_session:
         return redirect('/login')
+    categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
         newItem = Item(
             name=request.form['name'],
             description=request.form['description'],
-            category=category)
+            category=category, user_id=login_session['user_id'])
         # Prevents from adding a duplicate item into the same category
         c = session.query(Item).filter_by(category=category)
         count = c.filter_by(name=newItem.name).count()
         if count > 0:
             flash("Item already exists")
-            return redirect(url_for('newItem', category_name=category_name))
+            return redirect(url_for('newItem', category_name=category_name,
+                                    categories=categories))
         else:
             session.add(newItem)
             session.commit()
@@ -279,20 +289,27 @@ def newItem(category_name):
         return redirect(url_for('showItemsInCategory',
                                 category_name=category_name))
     else:
-        return render_template('newitem.html', category_name=category_name)
+        return render_template('newitem.html', category_name=category_name,
+                               categories=categories)
 
 
 # Edit current item's info
 @app.route('/category/<string:category_name>/<string:item_name>/edit',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
-    # Redirect user if not logged in
-    if 'username' not in login_session:
-        return redirect('/login')
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToEdit = c.filter_by(name=item_name).one()
+    # Redirect user if not logged in
+    if 'username' not in login_session:
+        return redirect('/login')
+    # Alerts users that they don't have permission to edit restaurant
+    # if they aren't the creator
+    if itemToEdit.user_id != login_session['user_id']:
+        return "<script>function dontHavePermission() {alert('You are not \
+        authorized to edit this item. Please create your own.');}\
+        </script><body onload='dontHavePermission()'>"
     if request.method == 'POST':
         if request.form['name']:
             # Prevent duplicate items in same category
@@ -331,12 +348,18 @@ def editItem(category_name, item_name):
 @app.route('/category/<string:category_name>/<string:item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
-    # Redirect user if not logged in
-    if 'username' not in login_session:
-        return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToDelete = c.filter_by(name=item_name).one()
+    # Redirect user if not logged in
+    if 'username' not in login_session:
+        return redirect('/login')
+    # Alerts users that they don't have permission to delete restaurant
+    # if they aren't the creator
+    if itemToDelete.user_id != login_session['user_id']:
+        return "<script>function dontHavePermission() {alert(\
+        'You are not authorized to delete this item. Please create your own.'\
+        );}</script><body onload='dontHavePermission()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()

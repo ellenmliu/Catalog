@@ -17,18 +17,32 @@
 
 
   <div class=maincontent>
-    <div class=rightcol>
+    <div class=right>
       <h1>{{item.name}}</h1>
-      {% if item %}
-        <div>
-          <p> Description: </p>
-          <p> {{item.description}} </p>
-          <a href = '{{url_for('editItem', category_name = category.name, item_name = item.name) }}'>Edit</a>
-          <a href = '{{url_for('deleteItem', category_name = category.name, item_name = item.name) }}'>Delete</a>
+
+      <div class=row>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+          <figure class="creator">
+    				<img src="{{creator.picture}}">
+            <br>
+            <br>
+    				<figcaption>{{ creator.name }}</figcaption>
+    			</figure>
         </div>
-      {% else %}
-        <p> There are no such item </p>
-      {% endif %}
+        <div class="col-md-7">
+          {% if item %}
+            <div>
+              <h4> Description: </h4>
+              <p class=description> {{item.description}} </p>
+              <a href = '{{url_for('editItem', category_name = category.name, item_name = item.name) }}'>Edit</a>
+              <a href = '{{url_for('deleteItem', category_name = category.name, item_name = item.name) }}'>Delete</a>
+            </div>
+          {% else %}
+            <p> There are no such item </p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
  {% endblock %}
