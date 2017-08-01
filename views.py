@@ -24,8 +24,6 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog App"
 
-## Check if google sign in works
-## Add in fb login
 
 # Login page
 @app.route('/login')
@@ -113,12 +111,65 @@ def gconnect():
 
     output = ''
     output += '<h1>Welcome, ' + login_session['username']
-    output += str(login_session['user_id'])
     output += '!</h1>'
     output += '<img src="' + login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: \
               150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
+    return output
+
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+    if request.args.get('state') != login_session['state']:
+        response = make_response(json.dumps('Invalid state parameter.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    
+    access_token = request.data
+    app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
+    app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+    url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
+        app_id, app_secret, access_token)
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+    
+    userinfo_url = "https://graph.facebook.com/v2.2/me"
+    #token = result.split("&")[0]
+    token = result.split(',')[0].split(':')[1].replace('"', '')
+
+    url = 'https://graph.facebook.com/v2.8/me?access_token=%s&fields=name,id,email' % token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+    
+    data = json.loads(result)
+    login_session['provider'] = 'facebook'
+    login_session['username'] = data["name"]
+    login_session['email'] = data["email"]
+    login_session['facebook_id'] = data["id"]
+
+    login_session['access_token'] = token
+    url = 'https://graph.facebook.com/v2.8/me/picture?access_token=%s&redirect=0&height=200&width=200' % token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+    data = json.loads(result)
+
+    login_session['picture'] = data["data"]["url"]
+
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+
+    login_session['user_id'] = user_id
+
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    flash("you are now logged in as %s" % login_session['username'])
+    print "done!"
     return output
 
 
@@ -157,7 +208,7 @@ def gdisconnect():
         response = make_response(json.dumps('Current user not connect'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_tokenn = credentials.access_token
+    access_token = credentials.access_token
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -169,14 +220,28 @@ def gdisconnect():
         return response
 
 
+@app.route('/fbdisconnect')
+def fbdisconnect():
+    facebook_id = login_session['facebook_id']
+    # The access token must me included to successfully logout
+    access_token = login_session['access_token']
+    url = 'https://graph.facebook.com/%s/permissions?access_token=%s' % (facebook_id,access_token)
+    h = httplib2.Http()
+    result = h.request(url, 'DELETE')[1]
+    return "you have been logged out"
+
+
 # Logout
 @app.route('/disconnect')
 def disconnect():
     if 'provider' in login_session:
-        if login_session == 'google':
-            gdisonnect()
+        if login_session['provider'] == 'google':
+            gdisconnect()
             del login_session['gplus_id']
             del login_session['credentials']
+        if login_session['provider'] == 'facebook':
+            fbdisconnect()
+            del login_session['facebook_id']
         del login_session['user_id']
         del login_session['username']
         del login_session['email']
@@ -244,7 +309,7 @@ def showItem(category_name, item_name):
     creator = getUserInfo(item.user_id)
 
     # If the user is not logged in, they can see the public version of page
-    if 'username' not in login_session or creator.id != user_id:
+    if 'username' not in login_session or creator.id != item.user_id:
         return render_template('publicitem.html', category=category, item=item,
                                creator=creator)
     else:
