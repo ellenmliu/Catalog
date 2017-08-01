@@ -14,8 +14,9 @@
   <!-- GOOGLE PLUS SIGN IN BUTTON-->
   <div class=maincontent>
     <div class=right>
-
-            <div id="signInButton">
+      <div class=row>
+        <div class=col-md-3></div>
+          <div class=col-md-2 id="signInButton">
             <span class="g-signin"
               data-scope="openid email"
               data-clientid="874218328691-5b9g5lgmucnkga9hhoutq0oldfjen9ur.apps.googleusercontent.com"
@@ -56,7 +57,8 @@
 
             }); } }
           </script>
-
+          
+          <div class=col-md-2></div>
           <!--Facebook Login -->
           <script>
             window.fbAsyncInit = function() {
@@ -106,12 +108,12 @@
           }
           </script>
 
-           <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+           <fb:login-button class=col-md-2 scope="public_profile,email" onlogin="sendTokenToServer();">
            <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
            </fb:login-button>
-
-
-           <div id="result"></div>
-        </div>
+           <div class=col-md-3></div>
       </div>
+      <div id="result"></div>
+    </div>
+  </div>
 {% endblock %}

@@ -134,3 +134,11 @@ figure {
   height: 100%;
   padding: 15px 50px 50px 40px;
 }
+
+#result {
+  text-align: center;
+}
+
+#result img{
+  margin: auto;
+}
