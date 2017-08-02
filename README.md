@@ -1,8 +1,11 @@
 # Catalog App
 Author: Ellen Liu
-Last Edit: 8/1/2017
+Last Edit: 8/2/2017
 
 ## Requirements for this project
+
+### python
+If you need python, go to https://www.python.org/downloads/.
 
 ### Git
 
@@ -47,3 +50,14 @@ Lastly, to run the web server, run:
     'python views.py'
 
 To view the catalog app, visit http://localhost:8000/. From there you can login in or view the public site. Once you login, you can add, edit, or delete items.
+
+## Necessary modules
+ If you do not have the necessary modules installed, please run these few lines in the terminal.
+
+    'curl https://bootstrap.pypa.io/ez_setup.py -o - | sudo python
+    sudo easy_install pip
+    sudo pip install requests
+    sudo pip install httplib2
+    sudo pip install flask
+    sudo pip install sqlalchemy
+    sudo pip install oauth2client'
