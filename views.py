@@ -95,7 +95,7 @@ def gconnect():
 
     # Store the access token in the session to use later
     login_session['provider'] = 'google'
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.to_json()
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
