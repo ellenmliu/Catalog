@@ -392,7 +392,7 @@ def editItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToEdit = c.filter_by(name=item_name).one()
-    # Alerts users that they don't have permission to edit restaurant
+    # Alerts users that they don't have permission to edit item
     # if they aren't the creator
     if itemToEdit.user_id != login_session['user_id']:
         return "<script>function dontHavePermission() {alert('You are not \
@@ -440,7 +440,7 @@ def deleteItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToDelete = c.filter_by(name=item_name).one()
-    # Alerts users that they don't have permission to delete restaurant
+    # Alerts users that they don't have permission to delete item
     # if they aren't the creator
     if itemToDelete.user_id != login_session['user_id']:
         return "<script>function dontHavePermission() {alert(\
