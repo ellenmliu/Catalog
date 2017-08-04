@@ -22,6 +22,7 @@ class Category(Base):
     __tablename__ = 'category'
     name = Column(String(80), nullable=False, unique=True)
     id = Column(Integer, primary_key=True)
+    items = relationship("Item", cascade="all, delete-orphan")
 
     @property
     def serialize(self):
