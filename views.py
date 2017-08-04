@@ -348,6 +348,7 @@ def showItemJSON(category_name, item_name):
 def newItem(category_name):
     # Redirects to login page if user is not logged in
     if 'username' not in login_session:
+        flash("Please log in")
         return redirect('/login')
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()

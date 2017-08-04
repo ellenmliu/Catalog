@@ -10,7 +10,19 @@
   {% block content %}
   {% include "header.html" %}
 
-
+  <!--Message Flashing-->
+  <div class=flash>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li><strong>{{message}}</strong></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </div>
+  
   <!-- GOOGLE PLUS SIGN IN BUTTON-->
   <div class=maincontent>
     <div class=right>
@@ -57,7 +69,7 @@
 
             }); } }
           </script>
-          
+
           <div class=col-md-2></div>
           <!--Facebook Login -->
           <script>
