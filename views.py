@@ -4,13 +4,14 @@ import json
 import random
 import string
 
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, g
 from flask import flash, jsonify, session as login_session, make_response
 from sqlalchemy import create_engine, exists
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -23,6 +24,16 @@ session = DBSession()
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog App"
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            flash("Please log in")
+            return redirect(url_for('showLogin'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # Login page
@@ -345,11 +356,8 @@ def showItemJSON(category_name, item_name):
 
 # Add new item to the current category
 @app.route('/category/<string:category_name>/new', methods=['GET', 'POST'])
+@login_required
 def newItem(category_name):
-    # Redirects to login page if user is not logged in
-    if 'username' not in login_session:
-        flash("Please log in")
-        return redirect('/login')
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
@@ -378,14 +386,12 @@ def newItem(category_name):
 # Edit current item's info
 @app.route('/category/<string:category_name>/<path:item_name>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editItem(category_name, item_name):
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToEdit = c.filter_by(name=item_name).one()
-    # Redirect user if not logged in
-    if 'username' not in login_session:
-        return redirect('/login')
     # Alerts users that they don't have permission to edit restaurant
     # if they aren't the creator
     if itemToEdit.user_id != login_session['user_id']:
@@ -429,13 +435,11 @@ def editItem(category_name, item_name):
 # Delete current item
 @app.route('/category/<string:category_name>/<path:item_name>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
     itemToDelete = c.filter_by(name=item_name).one()
-    # Redirect user if not logged in
-    if 'username' not in login_session:
-        return redirect('/login')
     # Alerts users that they don't have permission to delete restaurant
     # if they aren't the creator
     if itemToDelete.user_id != login_session['user_id']:
