@@ -292,7 +292,6 @@ def showCategoriesJSON():
 
 # Shows the items in the category
 @app.route('/category/<string:category_name>/')
-@app.route('/category/<string:category_name>/items')
 def showItemsInCategory(category_name):
     categories = session.query(Category).all()
     category = session.query(Category).filter_by(name=category_name).one()
@@ -312,7 +311,6 @@ def showItemsInCategory(category_name):
 
 # JSON of homepage with all the items in the category
 @app.route('/category/<string:category_name>/JSON')
-@app.route('/category/<string:category_name>/items/JSON')
 def showItemsInCategoryJSON(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
     items = session.query(Item).filter_by(category_id=category.id).all()
@@ -320,7 +318,7 @@ def showItemsInCategoryJSON(category_name):
 
 
 # Item page
-@app.route('/category/<string:category_name>/<string:item_name>')
+@app.route('/category/<string:category_name>/<path:item_name>')
 def showItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
@@ -337,7 +335,7 @@ def showItem(category_name, item_name):
 
 
 # JSON of the current item
-@app.route('/category/<string:category_name>/<string:item_name>/JSON')
+@app.route('/category/<string:category_name>/<path:item_name>/JSON')
 def showItemJSON(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
     c = session.query(Item).filter_by(category=category)
@@ -377,7 +375,7 @@ def newItem(category_name):
 
 
 # Edit current item's info
-@app.route('/category/<string:category_name>/<string:item_name>/edit',
+@app.route('/category/<string:category_name>/<path:item_name>/edit',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
     categories = session.query(Category).all()
@@ -428,7 +426,7 @@ def editItem(category_name, item_name):
 
 
 # Delete current item
-@app.route('/category/<string:category_name>/<string:item_name>/delete',
+@app.route('/category/<string:category_name>/<path:item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
     category = session.query(Category).filter_by(name=category_name).one()
