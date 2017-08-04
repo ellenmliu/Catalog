@@ -397,14 +397,14 @@ def editItem(category_name, item_name):
         if request.form['name']:
             # Prevent duplicate items in same category
             c = session.query(Item).filter_by(category=category)
-            count = c.filter_by(name=itemToEdit.name).count()
-            if count > 0:
+            try:
+                count = c.filter_by(name=itemToEdit.name).one()
                 flash("Item already exists")
                 return redirect(url_for('editItem',
                                         category_name=category_name,
                                         item_name=item_name,
                                         categories=categories))
-            else:
+            except NoResultFound:
                 itemToEdit.name = request.form['name']
         # Edit description
         if request.form['description']:
