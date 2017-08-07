@@ -1,3 +1,5 @@
+import json
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -15,113 +17,113 @@ category_json = json.loads("""{
   "users": [
     {
       "name": "RoboBarita",
-      "email": "tinnyTim@udacity.com"
+      "email": "tinnyTim@udacity.com",
       "picture": "https://pbs.twimg.com/profile_images/2671170543/\
              18debd694829ed78203a5a36dd364160_400x400.png"
     }
   ],
   "categories": [
     {
-      "name": "Soccer"
+      "name": "Soccer",
       "items": [
         {
           "name": "Soccer Ball",
-          "description": "Can't play soccer without a ball"
+          "description": "Can't play soccer without a ball",
           "user_id": 1
         },
         {
           "name": "Cleats",
-          "description": "Helps with grip"
+          "description": "Helps with grip",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Basketball"
+      "name": "Basketball",
       "items": [
         {
           "name": "Basketball",
-          "description": "Signed by Jordan himself"
+          "description": "Signed by Jordan himself",
           "user_id": 1
         },
         {
           "name": "Shoes",
-          "description": "Got them hops"
+          "description": "Got them hops",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Baseball"
+      "name": "Baseball",
       "items": [
         {
           "name": "Bat",
-          "description": "Hit that homerun"
+          "description": "Hit that homerun",
           "user_id": 1
         },
         {
           "name": "Cap",
-          "description": "Get the look of a baseball player"
+          "description": "Get the look of a baseball player",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Badminton"
+      "name": "Badminton",
       "items": [
         {
           "name": "Raquet",
-          "description": "Strong and light"
+          "description": "Strong and light",
           "user_id": 1
         },
         {
           "name": "Net",
-          "description": "Play anywhere
+          "description": "Play anywhere",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Skating"
+      "name": "Skating",
       "items": [
         {
           "name": "Skates",
-          "description": "Fastest skates around"
+          "description": "Fastest skates around",
           "user_id": 1
         },
         {
           "name": "Helmet",
-          "description": "Stay safe"
+          "description": "Stay safe",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Hockey"
+      "name": "Hockey",
       "items": [
         {
           "name": "Hockey Stick",
-          "description": "Get some goals"
+          "description": "Get some goals",
           "user_id": 1
         },
         {
           "name": "Knee pads",
-          "description": "Protection is key"
+          "description": "Protection is key",
           "user_id": 1
         }
       ]
     },
     {
-      "name": "Snowboarding"
+      "name": "Snowboarding",
       "items": [
         {
           "name": "Googles",
-          "description": "The whites of the snow won't stop you"
+          "description": "The whites of the snow won't stop you",
           "user_id": 1
         },
         {
           "name": "Snowboard",
-          "description": "Customizable"
+          "description": "Customizable",
           "user_id": 1
         }
       ]
@@ -279,6 +281,14 @@ category_json = json.loads("""{
 ##session.add(item13)
 ##session.commit()
 
+for u in category_json['users']:
+  newUser = User(
+    name=str(u['name']),
+    email=str(u['email']),
+    picture=str(u['picture'])
+  )
+  session.add(newUser)
+  session.commit()
 
 
               
