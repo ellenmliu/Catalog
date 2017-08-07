@@ -1,6 +1,6 @@
 # Catalog App
 Author: Ellen Liu
-Last Edit: 8/2/2017
+Last Edit: 8/7/2017
 
 ## Requirements for this project
 
@@ -52,7 +52,7 @@ Lastly, to run the web server, run:
 To view the catalog app, visit http://localhost:8000/. From there you can login in or view the public site. Once you login, you can add, edit, or delete items.
 
 ## Necessary modules
- If you do not have the necessary modules installed, please run these few lines in the terminal.
+If you do not have the necessary modules installed, please run these few lines in the terminal.
 
     'curl https://bootstrap.pypa.io/ez_setup.py -o - | sudo python
     sudo easy_install pip
